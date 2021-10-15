@@ -29,8 +29,9 @@ AGnssAgentServer::AGnssAgentServer(QObject *parent) : QObject(parent)
 
 void AGnssAgentServer::start()
 {
-	qDebug("AGnss server start(v%d.%d), listen port: %d", MAJOR_VERSION, MINOR_VERSION, PORT);
-        qDebug()<<"EPH data source:"<<EPH_BANNER;
+	//qDebug("AGnss server start(v%d.%d), listen port: %d", MAJOR_VERSION, MINOR_VERSION, PORT);
+	qDebug("AGnss server start(v%d.%d), listen port: %d", MAJOR_VERSION, MINOR_VERSION, port_no);
+	qDebug()<<"EPH data source:"<<EPH_BANNER;
         qDebug()<<"-------------------------------------------------";
         qDebug()<<"Accept message formats:";
         qDebug()<<"cmd=?; '?' must be one of 'full', 'eph', 'aid'.";
@@ -39,9 +40,18 @@ void AGnssAgentServer::start()
 	qDebug()<<"gnss=?; '?' can be 'gps', 'bds' or 'gps+bds'.";
 	qDebug()<<"For example: 'cmd=full;lat=39.12;lon=114.21;gnss=gps+bds;'";
         qDebug()<<"-------------------------------------------------";
-        server->listen(QHostAddress::Any, PORT);
+	server->listen(QHostAddress::Any, port_no);
 	getEphDataFromServer(GPS);
 	getEphDataFromServer(BDS);
+}
+
+void AGnssAgentServer::setOptions(QString u, QString w, unsigned short p)
+{
+	qDebug()<<"Setup Options:"<<"User="<<u<<", Password="<<w<<", Port="<<p;
+	username = u;
+	password = w;
+	port_no = p;
+
 }
 
 void AGnssAgentServer::timerEvent(QTimerEvent *event)
@@ -85,13 +95,16 @@ void AGnssAgentServer::ephConnected(int constell)
 	qDebug()<<CONSTELL_NAME(constell)<<"On Connected";
 
         qDebug()<<"******************************************";
-        qDebug()<<"User:"<<USERNAME<<"Password:"<<PASSWORD;
-	if (strcmp(USERNAME, "freetrial") == 0)
+	//qDebug()<<"User:"<<USERNAME<<"Password:"<<PASSWORD;
+	qDebug()<<"User:"<<username<<"Password:"<<password;
+	//if (strcmp(USERNAME, "freetrial") == 0)
+	if (username == "freetrial")
                 qDebug()<<"WARNING: THIS IS A freetrial ACCOUNT!!!";
         qDebug()<<"******************************************";
 
-        char request[128];
-	sprintf(request, constell == GPS ? GPS_EPH_REQUEST : BDS_EPH_REQUEST, USERNAME, PASSWORD);
+	char request[256];
+	//sprintf(request, constell == GPS ? GPS_EPH_REQUEST : BDS_EPH_REQUEST, USERNAME, PASSWORD);
+	snprintf(request, sizeof(request), constell == GPS ? GPS_EPH_REQUEST : BDS_EPH_REQUEST, username.toLocal8Bit().data(), password.toLocal8Bit().data());
 
 	ephSockets[constell]->write(request);
         qDebug()<<"Request message:"<<request;

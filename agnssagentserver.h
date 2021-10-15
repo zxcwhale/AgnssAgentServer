@@ -10,19 +10,18 @@
 #define EPH_PORT 2621
 #define GPS_EPH_REQUEST "user=%s;pwd=%s;cmd=eph;lat=0.0;lon=0.0;gnss=gps;"
 #define BDS_EPH_REQUEST "user=%s;pwd=%s;cmd=eph;lat=0.0;lon=0.0;gnss=bds;"
-#define USERNAME "freetrial"
-#define PASSWORD "123456"
+//#define USERNAME "freetrial"
+//#define PASSWORD "123456"
 #define EPH_KEY_BYTE 0xBA
 #define EPH_LENGTH_FLAG "DataLength"
 #define AID_INI_SIZE 66
 
-#define PORT 3131
+//#define PORT 3131
 #define EPH_UPDATE_INTERVAL 1800 // seconds
 #define EPH_EXPIRED_SECONDS 7200 // seconds
 
 #define MAJOR_VERSION	2
-#define MINOR_VERSION	1
-
+#define MINOR_VERSION	2
 
 #define BIT_MASK(c) (1 << (c))
 enum {
@@ -60,6 +59,8 @@ public:
         explicit AGnssAgentServer(QObject *parent = 0);
         void start();
 
+	void setOptions(QString u, QString w, unsigned short p);
+
 protected:
         virtual void timerEvent(QTimerEvent *event);
 
@@ -92,6 +93,10 @@ private:
 private:
         QTcpServer *server;
         int ephTimerId;
+
+	QString username;
+	QString password;
+	unsigned short port_no;
 
 	qint64 ephTimeStamp[MAX_CONSTELL_COUNT];
         QTcpSocket *ephSockets[MAX_CONSTELL_COUNT];
