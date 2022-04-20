@@ -185,18 +185,23 @@ QByteArray AGnssAgentServer::packPayload(struct client_message msg)
 	if (!msg.mask[CMD])
                 return QByteArray("Missing or invalid \"cmd=?;\".");
 
+
+	/*
 	if (!msg.mask[LON])
-                return QByteArray("Missing or invalid \"lon=?;\".");
+		return QByteArray("Missing or invalid \"lon=?;\".");
 
 	if (!msg.mask[LAT])
-                return QByteArray("Missing or invalid \"lat=?;\".");
+		return QByteArray("Missing or invalid \"lat=?;\".");
+	*/
 
 	if (!msg.mask[GNSS])
 		return QByteArray("Invalid \"gnss=?;\".");
 
         QByteArray payload;
         if (msg.cmd & AID) {
-                QByteArray aidIniMessage = packCurrentAidIniMessage(msg.lat, msg.lon);
+		bool has_latlong = msg.mask[LON] && msg.mask[LAT];
+
+		QByteArray aidIniMessage = packCurrentAidIniMessage(msg.lat, msg.lon, has_latlong);
                 qDebug()<<"Add AID INI message";
                 payload.append(aidIniMessage);
         }
@@ -274,7 +279,7 @@ void AGnssAgentServer::unpackClientMessage(QByteArray message, struct client_mes
         }
 }
 
-QByteArray AGnssAgentServer::packCurrentAidIniMessage(double lat, double lon)
+QByteArray AGnssAgentServer::packCurrentAidIniMessage(double lat, double lon, bool has_latlong)
 {
         DATETIME_STR datetime;
         QDateTime dt = QDateTime::currentDateTimeUtc();
@@ -291,7 +296,7 @@ QByteArray AGnssAgentServer::packCurrentAidIniMessage(double lat, double lon)
         lla.alt = 0.0;
         lla.lat = lat;
         lla.lon = lon;
-        lla.valid = 1;
+	lla.valid = has_latlong && lat >= -90.0 && lat <= 90 && lon >= -180.0 && lon <= 180.0;
 
         qDebug("DATETIME: valid=%d, date=%d-%02d-%02d, time=%02d:%02d:%02d, ms=%f",
                datetime.valid,

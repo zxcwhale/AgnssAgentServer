@@ -21,7 +21,7 @@
 #define EPH_EXPIRED_SECONDS 7200 // seconds
 
 #define MAJOR_VERSION	2
-#define MINOR_VERSION	2
+#define MINOR_VERSION	3
 
 #define BIT_MASK(c) (1 << (c))
 enum {
@@ -79,7 +79,7 @@ private:
         QByteArray packReplyMessage(QByteArray message);
 	QByteArray packPayload(struct client_message msg);
 	void unpackClientMessage(QByteArray message, struct client_message *pMsg);
-        QByteArray packCurrentAidIniMessage(double lat, double lon);
+	QByteArray packCurrentAidIniMessage(double lat, double lon, bool has_latlong);
 	void getEphDataFromServer(int constell);
         bool checkEphDataLength(QByteArray data);
         int getEphDataLength(QByteArray data);
