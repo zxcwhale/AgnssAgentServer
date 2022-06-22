@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QDateTime>
 #include <QTimerEvent>
+#include <QFile>
 #include "casicAgnssAidIni.c"
 
 #define CHECK_CONSTELL(c) ((c) == GPS || (c) == BDS)
@@ -130,8 +131,17 @@ void AGnssAgentServer::ephReadyRead(int constell)
 			if (key_recved)
 				ephData[constell].append(ch);
                 }
+
+		// Save EPH data to local machine.
+		QFile saved(constell == GPS ? "gps.eph" : "bds.eph");
+		if (saved.open(QFile::WriteOnly)) {
+			qDebug()<<"EPH data save to:"<<saved.fileName();
+			saved.write(ephData[constell]);
+			saved.close();
+		}
+
 		ephTimeStamp[constell] = QDateTime::currentMSecsSinceEpoch() / 1000;
-                qDebug()<<"EPH data updated!\n";
+		qDebug()<<"EPH data updated!\n";
 
 		tmpData[constell].clear();
 	}
@@ -173,8 +183,8 @@ QByteArray AGnssAgentServer::packReplyMessage(QByteArray clientMessage)
         qDebug("Payload length = %d bytes", payload.length());
 
         QByteArray reply;
-        reply.append(QString("%1 AGNSS agent server.\n").arg(EPH_BANNER));
-        reply.append(QString("%1: %2.\n").arg(EPH_LENGTH_FLAG).arg(payload.length()));
+	reply.append(QString("%1 AGNSS Agent Server.\n").arg(EPH_BANNER).toLocal8Bit());
+	reply.append(QString("%1: %2.\n").arg(EPH_LENGTH_FLAG).arg(payload.length()).toLocal8Bit());
         reply.append("\n");
         reply.append(payload);
         return reply;

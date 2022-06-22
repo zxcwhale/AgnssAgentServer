@@ -21,7 +21,7 @@
 #define EPH_EXPIRED_SECONDS 7200 // seconds
 
 #define MAJOR_VERSION	2
-#define MINOR_VERSION	3
+#define MINOR_VERSION	4
 
 #define BIT_MASK(c) (1 << (c))
 enum {
