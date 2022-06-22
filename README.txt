@@ -20,4 +20,7 @@ lon,lat: 粗略的经纬度, 应该通过基站ID,蓝牙或wifi获取粗略的�
 gnss: 辅助数据的卫星系统.  gps, bds或gps+bds.
 
 注意事项:
-在agnssagentserver.h中, 应当宏定义正确的"#define USERNAME xxx"以及"#define PASSWORD xxx", 否则无法正确获取星历辅助数据.
+AgnssAgentServer程序运行时需要以下参数:
+用户名 - 该参数为www.gnss-aide.com服务器的注册用户名，必填。
+密码 - 该参数为用户名参数对应的密码，必填。
+端口 - 代理服务器的服务端口，选填，默认为3131.
