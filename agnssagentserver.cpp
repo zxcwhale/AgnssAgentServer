@@ -202,10 +202,13 @@ QByteArray AGnssAgentServer::packPayload(struct client_message msg)
 
 	if (!msg.mask[LAT])
 		return QByteArray("Missing or invalid \"lat=?;\".");
-	*/
 
 	if (!msg.mask[GNSS])
 		return QByteArray("Invalid \"gnss=?;\".");
+	*/
+
+	if (!msg.mask[GNSS]) // If gnss is missing, use GPS as default
+		msg.gnss = GPS;
 
         QByteArray payload;
         if (msg.cmd & AID) {

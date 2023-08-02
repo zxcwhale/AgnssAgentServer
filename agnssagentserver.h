@@ -5,8 +5,8 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 
-#define EPH_BANNER "CASIC"
-#define EPH_SERVER "www.gnss-aide.com"
+#define EPH_BANNER "HZZKW"
+#define EPH_SERVER "121.41.40.95"
 #define EPH_PORT 2621
 #define GPS_EPH_REQUEST "user=%s;pwd=%s;cmd=eph;lat=0.0;lon=0.0;gnss=gps;"
 #define BDS_EPH_REQUEST "user=%s;pwd=%s;cmd=eph;lat=0.0;lon=0.0;gnss=bds;"
@@ -21,7 +21,7 @@
 #define EPH_EXPIRED_SECONDS 7200 // seconds
 
 #define MAJOR_VERSION	2
-#define MINOR_VERSION	4
+#define MINOR_VERSION	5
 
 #define BIT_MASK(c) (1 << (c))
 enum {
