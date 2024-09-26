@@ -2,7 +2,7 @@
 该工程演示如何构架AGNSS代理服务器.
 
 ## 开发环境: 
-QT5
+QT6
 
 ## 代码文件:
 agnssagentserver.h agnssagentserver.cpp: 代理服务器类.
