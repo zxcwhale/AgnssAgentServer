@@ -5,9 +5,9 @@
 QT6
 
 ## 代码文件:
-agnssagentserver.h agnssagentserver.cpp: 代理服务器类.
-casicAgnssAidIni.h casicAgnssAidIni.c: Casic AID INI 消息打包函数
-main.cpp: 入口函数.
+- agnssagentserver: 代理服务器.
+- casicAgnssAidIni: Casic AID INI 消息打包函数
+
 
 ## 程序功能:
 AgnssAgentServer:
